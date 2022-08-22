@@ -91,7 +91,7 @@ void CGame::Manage()
 	gameEndTextures = TextureManager::LoadTexture(gameRenderer, SDL_TRUE, "assets/textures/finalstates.png");
 	gameEndClips[0] = { 0, 0, 600, 200 }; //player one wins
 	gameEndClips[1] = { 0, 200, 600, 200 }; //player two wins
-	gameEndClips[2] = { 0, 200, 600, 200 }; //tie
+	gameEndClips[2] = { 0, 400, 600, 200 }; //tie
 
 	gameEndDimensions = { 0, 0, 600, 200 };
 
@@ -149,9 +149,15 @@ void CGame::Logic()
 			{
 				Grid.DrawConsole(); //Draw grid on console
 			}
-			else if (gameEvent.key.keysym.sym == SDLK_RSHIFT)
+			else if (gameEvent.key.keysym.sym == SDLK_LSHIFT)
 			{
 				gameRestart = true;
+				printf(".::GAME::RESTART::.\n");
+			}
+			else if (gameEvent.key.keysym.sym = SDLK_ESCAPE)
+			{
+				isRunning = false;
+				printf(".::GAME::END::.\n");
 			}
 		}
 
@@ -167,12 +173,6 @@ void CGame::Logic()
 		game_state = GAME_WON_P2;
 	}
 
-	//Verifies tie. IF grid is full && nobody won -> tie
-	if (Grid.GridFull() && (game_state != GAME_WON_P1 && game_state != GAME_WON_P2))
-	{
-		game_state = GAME_TIE;
-	}
-
 	//Change player states. If grind changed change player.
 	if (gridChange && game_state == GAME_PLAYER1)//IF P1 PLAYING -> P2 PLAYS
 	{
@@ -182,8 +182,14 @@ void CGame::Logic()
 	{
 		game_state = GAME_PLAYER1;
 	}
+
+	//Verifies tie. IF grid is full && nobody won -> tie
+	if (Grid.GridFull() && (game_state != GAME_WON_P1 && game_state != GAME_WON_P2))
+	{
+		game_state = GAME_TIE;
+	}
 	
-	//IF GAME STOPED -> REINITIALIZE GRUID && P1 PLAYS
+	//IF GAME STOPED -> REINITIALIZE GRID && P1 PLAYS
 	if (gameRestart) 
 	{
 		Grid.Initialize();
@@ -212,8 +218,8 @@ void CGame::Render()
 		TextureManager::RenderTexture(gameRenderer, gameEndTextures, &gameEndClips[1], &gameEndDimensions);
 		break;
 	case GAME_TIE:
-		break;
 		TextureManager::RenderTexture(gameRenderer, gameEndTextures, &gameEndClips[2], &gameEndDimensions);
+		break;
 	default:
 		break;
 	}

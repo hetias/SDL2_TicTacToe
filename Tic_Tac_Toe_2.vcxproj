@@ -71,12 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\visual_c\SDL2\include;C:\visual_c\SDL2_Image\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\visual_c\SDL2\lib\x64;C:\visual_c\SDL2_Image\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\dependencies\SDL2\include;$(ProjectDir)\dependencies\SDL2_Image\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\dependencies\SDL2\lib;$(ProjectDir)\dependencies\SDL2_Image\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\visual_c\SDL2\include;C:\visual_c\SDL2_Image\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\visual_c\SDL2\lib\x64;C:\visual_c\SDL2_Image\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\dependencies\SDL2\include;$(ProjectDir)\dependencies\SDL2_Image\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\dependencies\SDL2\lib;$(ProjectDir)\dependencies\SDL2_Image\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
