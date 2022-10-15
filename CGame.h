@@ -5,6 +5,23 @@
 #include<SDL.h>
 #include<SDL_image.h>
 
+
+//struct that storage x and y values of the grid.
+typedef struct Position {
+	int x;
+	int y;
+}BoardPosition;
+
+//different game states
+enum GAME_STATE {
+	GAME_STOP,
+	GAME_PLAYER1,
+	GAME_PLAYER2,
+	GAME_WON_P1,
+	GAME_WON_P2,
+	GAME_TIE
+};
+
 class CGame
 {
 public:

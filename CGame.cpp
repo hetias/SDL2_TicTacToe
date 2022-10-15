@@ -1,30 +1,27 @@
 #include"CGame.h"
 #include"TextureManager.h"
 #include"GridManager.h"
+#include"CGameAI.h"
 
 //Final game texture/clips
 SDL_Texture* gameEndTextures = NULL;
 SDL_Rect gameEndClips[3];
 SDL_Rect gameEndDimensions;
 
+
 //grid. Board was a better name
 GridManager Grid;
 
 //game state enum, so we have track
 //of current game state
-enum GAME_STATE {
-	GAME_STOP,
-	GAME_PLAYER1,
-	GAME_PLAYER2,
-	GAME_WON_P1,
-	GAME_WON_P2,
-	GAME_TIE
-};
 GAME_STATE game_state;
 
 //mouse position on screen
 int mousex;
 int mousey;
+
+//is ia playing
+bool isIAactive = true;
 
 //Game constructor
 CGame::CGame()
@@ -76,6 +73,8 @@ bool CGame::Initialize(const char* title, int width, int height)
 		return false;
 	}
 
+	printf("SPACE: draw grid on console(debug).\nLSHIFT: Restart game.\nESCAPE: Game End.\nLCTRL: active/desactive IA.\n");
+
 	return true;
 }
 
@@ -117,6 +116,7 @@ void CGame::Logic()
 	bool gridChange = false;
 	bool gameRestart = false;
 
+	//Register keyboard and mouse input
 	while (SDL_PollEvent(&gameEvent) != 0)
 	{
 		//If event is a Quit event, then stop running
@@ -132,8 +132,9 @@ void CGame::Logic()
 			{
 				gridChange = Grid.ModifyGrid(GAME_PLAYER1);
 			}
-			else if(game_state == GAME_PLAYER2)
+			else if(game_state == GAME_PLAYER2 && isIAactive == false)
 			{
+				//player two plays just if IA is desactivated
 				gridChange = Grid.ModifyGrid(GAME_PLAYER2);
 			}
 			else if (game_state == GAME_TIE || game_state == GAME_WON_P1 || game_state == GAME_WON_P2)
@@ -154,15 +155,73 @@ void CGame::Logic()
 				gameRestart = true;
 				printf(".::GAME::RESTART::.\n");
 			}
-			else if (gameEvent.key.keysym.sym = SDLK_ESCAPE)
+			else if (gameEvent.key.keysym.sym == SDLK_ESCAPE)
 			{
 				isRunning = false;
 				printf(".::GAME::END::.\n");
+			}
+			else if (gameEvent.key.keysym.sym == SDLK_LCTRL)
+			{
+				isIAactive = !isIAactive;
+				if (isIAactive)
+				{
+					printf("IA Activated.\n");
+				}
+				else
+				{
+					printf("IA Desactivated.\n");
+				}
 			}
 		}
 
 	}
 
+
+	//AI makes it's turn if is playing
+	if (game_state == GAME_PLAYER2 && isIAactive == true)
+	{
+		//rebuild grid
+		//here we rebuild the grid stored on Grid object.
+
+		int* gridptr = Grid.ReturnGrid(); //take pointer of the first element of the array
+
+		//copies values from gridptr to new array
+		int currentGrid[3][3]; 
+
+		printf("Rebuilding grid...\n");
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				currentGrid[i][j] = *gridptr;
+				gridptr++; //dangerous pointer arethmetics!1!11!!
+			}
+		}
+
+		//now we can pass the current grid normally
+		printf("Making new move with current grid...\n"); //mostly debug code...
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				printf("%d ", currentGrid[i][j]);
+			}
+			printf("\n");
+		}
+
+		//Finally, we calculate the next move using minimax. It returns a board position.
+		BoardPosition newPos = CGameAI::NextMove(currentGrid);
+
+		//Using the returned position, we pass it to AIModGrid.
+		Grid.AIModGrid(newPos);
+
+		//i love debug code as much as garlic bread!1!!1
+		printf("New AI move: %d, %d\n", newPos.x, newPos.y);
+
+		//A player (IA) made a change, so gridchange has to turn true.
+		gridChange = true;
+	}
+	
 	//verify victory - Tie - Full
 	if (Grid.VerifyVictory() == GAME_PLAYER1)
 	{
@@ -194,6 +253,7 @@ void CGame::Logic()
 	{
 		Grid.Initialize();
 		game_state = GAME_PLAYER1;
+		system("cls");
 	}
 }
 

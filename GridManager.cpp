@@ -97,6 +97,11 @@ bool GridManager::ModifyGrid(int player)
 	return false;
 }
 
+void GridManager::AIModGrid(BoardPosition pos)
+{
+	Grid[pos.x][pos.y] = 2;
+}
+
 void GridManager::Initialize()
 {
 	for (int i = 0; i < 3; i++)
@@ -145,37 +150,16 @@ int GridManager::VerifyVictory()
 
 int GridManager::GridHorizontalVerif()
 {
-	//takes number on the first column(which's can be 0-none 1-circle 2-cross)
-	//if isn't 0, look for repetition on the whole row
-	//if it repeats three times, return the number(so it returns the player who won)
-
-	//if there aren't enough repetitions, try the next row
-
-	//if doesn't find repetition on any row, return 0. Nobody won
-	int pivot = 0;
-	int matches = 0;
+	//oldest version of this was kinda absurd
 
 	for (int i = 0; i < 3; i++)
 	{
-		if (Grid[i][0] != 0)
-		{
-			pivot = Grid[i][0];
-			for (int j = 0; j < 3; j++)
-			{
-				if (pivot == Grid[i][j]) matches++;
-			}
-
-			if (matches >= 3)
-			{
-				return pivot;
-			}
-			else
-			{
-				matches = 0;
-			}
+		if (Grid[i][0] != 0) {
+			if (Grid[i][0] == Grid[i][1] && Grid[i][2] ==Grid[i][1]) return Grid[i][0];
 		}
 		
 	}
+	
 
 	return 0;
 }
@@ -183,29 +167,13 @@ int GridManager::GridHorizontalVerif()
 int GridManager::GridVerticalVerif()
 {
 	//same that horizontal, but applied differently
-	int pivot = 0;
-	int matches = 0;
-
 	for (int i = 0; i < 3; i++)
 	{
 		if (Grid[0][i] != 0)
 		{
-			pivot = Grid[0][i];
-			for (int j = 0; j < 3; j++)
-			{
-				if (pivot == Grid[j][i]) matches++;
-			}
-
-			if (matches >= 3)
-			{
-				return pivot;
-			}
-			else
-			{
-				matches = 0;
-			}
+			if (Grid[0][i] == Grid[1][i] && Grid[2][i] == Grid[1][i]) return Grid[0][i];
 		}
-
+		
 	}
 
 	return 0;
@@ -213,45 +181,25 @@ int GridManager::GridVerticalVerif()
 
 int GridManager::GridDiagonalPrincVerif()
 {
-	//takes first element on the matrix if it's different from 0
-	//now checks through the principal diagonal for the same num on repetition
-
-	//if repeated three times, return the number
-
-	int pivot = 0;
-	int matches = 0;
-
-	if (Grid[0][0] != 0) pivot = Grid[0][0];
-
-	for (int i = 0; i < 3; i++)
+	if (Grid[0][0] != 0)
 	{
-		if (pivot == Grid[i][i]) matches++;
+		if (Grid[0][0] == Grid[1][1] && Grid[2][2] == Grid[1][1]) return Grid[0][0];
 	}
-
-	if (matches >= 3) return pivot;
-
 	return 0;
 }
 
 int GridManager::GridDiagonalSecVerif()
 {
-	//similiar like GridDiagonalPrincVerif, but slightly changed 
-	//for secondary diagonal
-	int pivot = 0;
-	int matches = 0;
-
-	//chechs for number on x ->
-	//- - x
-	//- - -
-	//- - -
-	if (Grid[2][0] != 0) pivot = Grid[2][0];
-
-	for (int i = 0; i < 3; i++)
+	if (Grid[0][2] != 0)
 	{
-		if (Grid[i][2 - i] == pivot) matches++;
+		if (Grid[0][2] == Grid[1][1] && Grid[2][0] == Grid[1][1])return Grid[0][2];
 	}
-
-	if (matches >= 3) return pivot;
-
 	return 0;
+}
+
+int* GridManager::ReturnGrid()
+{
+	int* gridptr = &Grid[0][0];
+
+	return gridptr;
 }

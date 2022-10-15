@@ -138,12 +138,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CGame.cpp" />
+    <ClCompile Include="CGameAI.cpp" />
     <ClCompile Include="GridManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CGame.h" />
+    <ClInclude Include="CGameAI.h" />
     <ClInclude Include="GridManager.h" />
     <ClInclude Include="TextureManager.h" />
   </ItemGroup>
