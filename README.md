@@ -15,8 +15,8 @@ The program whould have:
 For now, Tic Tac Toe mechanics it's all it has.
 The next step will be IA with min max.
 - _Tic Tac Toe game._
-- __AI to play with.__
-- ~~Networking for online play, 1 vs 1.~~
+- _AI to play with._ [Updated: 15/9]
+- __Networking for online play, 1 vs 1.__
 
 
 
